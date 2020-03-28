@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<h2>COVID-19 INDIA - <script> document.write(new Date().toLocaleDateString()); </script></h2>
+
+<p id="demo"></p>
+
+<script>
+var obj, dbParam, xmlhttp, myObj, x, txt = "";
+obj = { table: "customers", limit: 20 };
+dbParam = JSON.stringify(obj);
+xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    myObj = JSON.parse(this.responseText);
+    txt += "<table id='customers' border='2'>"
+	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th></tr>";
+    
+	//for (x in myObj) {
+	  
+		//txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
+		txt += "<tr><td>" + myObj.country + "</td><td>" + myObj.cases + "</td><td>" + myObj.todayCases + "</td><td>" + myObj.deaths + "</td><td>" + myObj.todayDeaths + "</td><td>" + myObj.recovered + "</td></tr>";
+
+   // }
+    txt += "</table>"    
+    document.getElementById("demo").innerHTML = txt;
+  }
+};
+xmlhttp.open("GET", "https://corona.lmao.ninja/countries/IND", true);
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("x=" + dbParam);
+</script>
+
+</body>
+</html>
