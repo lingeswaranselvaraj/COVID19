@@ -60,21 +60,24 @@ dbParam = JSON.stringify(obj);
 xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-    myObj = JSON.parse(this.responseText);
+        myObj = (JSON.parse(this.responseText)).data;
     txt += "<table id='customers' border='2'>"
-	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL TESTS DONE</span>" + "</th></tr>";
-    
-	//for (x in myObj) {
-	  
-		//txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
-		txt += "<tr><td>" + myObj.country + "</td><td>" + myObj.cases + "</td><td>" + myObj.todayCases + "</td><td>" + myObj.deaths + "</td><td>" + myObj.todayDeaths + "</td><td>" + myObj.recovered + "</td><td>" + myObj.tests + "</td></tr>";
-
-   // }
+	//txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL TESTS DONE</span>" + "</th></tr>";
+    txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th></tr>";
+ myObj.sort(function(a, b){
+    return b.confirmed - a.confirmed;
+});   
+	for (var x = 0; x < myObj.length; x++) {
+	
+	 if( myObj[x].location == "India"){
+		txt += "<tr><td>" + myObj[x].location + "</td><td>" + myObj[x].confirmed + "</td><td>" + myObj[x].dead + "</td><td>" + myObj[x].recovered + "</td></tr>";
+}
+    }
     txt += "</table>"    
     document.getElementById("demo").innerHTML = txt;
   }
 };
-xmlhttp.open("GET", "https://corona.lmao.ninja/v2/countries/India?yesterday=true&strict=true", true);
+xmlhttp.open("GET", "https://www.trackcorona.live/api/countries", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + dbParam);
 
