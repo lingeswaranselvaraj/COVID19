@@ -29,8 +29,11 @@
 <body>
 
 <h2>COVID-19 ALL COUNTRIES - <script> document.write(new Date().toLocaleDateString()); </script></h2>
-
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <p id="demo"></p>
+
 
 <script>
 var obj, dbParam, xmlhttp, myObj, x, txt = "";
@@ -41,11 +44,11 @@ xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     myObj = JSON.parse(this.responseText);
     txt += "<table id='customers' border='2'>"
-	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th></tr>";
+	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL TEST DONE</span>" + "</th></tr>";
     
 	for (x in myObj) {
 	  
-		txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
+		txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].recovered + "</td><td>" + myObj[x].tests + "</td></tr>";
 	//	txt += "<tr><td>" + myObj.country + "</td><td>" + myObj.cases + "</td><td>" + myObj.todayCases + "</td><td>" + myObj.deaths + "</td><td>" + myObj.todayDeaths + "</td><td>" + myObj.recovered + "</td></tr>";
 
     }
@@ -53,9 +56,56 @@ xmlhttp.onreadystatechange = function() {
     document.getElementById("demo").innerHTML = txt;
   }
 };
-xmlhttp.open("GET", "https://corona.lmao.ninja/countries?sort=cases", true);
+xmlhttp.open("GET", "https://corona.lmao.ninja/v2/countries?yesterday=true&sort=cases", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + dbParam);
+
+window.onload = function() {
+
+var dataPoints = [];
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2",
+	title: {
+		text: "Corona Data"
+	},
+	axisY: {
+		title: "No of Cases",
+		titleFontSize: 24,
+		interval: 50000
+	},
+	axisX: {
+		title: "Top 25 Countries",
+		titleFontSize: 24,
+		interval: 1
+	},
+	data: [{
+		type: "column",
+		yValueFormatString: "#,### Units",
+		xValueFormatString: "#,### Country",
+		dataPoints: dataPoints
+	}]
+});
+
+function addData(data) {
+	for (var i = 0; i < 25; i++) {
+	//alert(data[i].country)
+		dataPoints.push({		
+			label: data[i].country,
+			y: data[i].cases
+		});
+	}
+	chart.render();
+
+}
+
+$.getJSON("https://corona.lmao.ninja/v2/countries?yesterday=true&sort=cases", addData);
+
+}
+
+
+
 </script>
 
 </body>
