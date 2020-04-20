@@ -62,13 +62,15 @@ dbParam = JSON.stringify(obj);
 xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-    myObj = JSON.parse(this.responseText);
+    myObj = (JSON.parse(this.responseText)).data;
     txt += "<table id='customers' border='2'>"
-	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL TEST DONE</span>" + "</th></tr>";
-    
+	txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th></tr>";
+ myObj.sort(function(a, b){
+    return b.confirmed - a.confirmed;
+});   
 	for (x in myObj) {
 	  
-		txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].recovered + "</td><td>" + myObj[x].tests + "</td></tr>";
+		txt += "<tr><td>" + myObj[x].location + "</td><td>" + myObj[x].confirmed + "</td><td>" + myObj[x].dead + "</td><td>" + myObj[x].recovered + "</td></tr>";
 	//	txt += "<tr><td>" + myObj.country + "</td><td>" + myObj.cases + "</td><td>" + myObj.todayCases + "</td><td>" + myObj.deaths + "</td><td>" + myObj.todayDeaths + "</td><td>" + myObj.recovered + "</td></tr>";
 
     }
@@ -76,7 +78,7 @@ xmlhttp.onreadystatechange = function() {
     document.getElementById("demo").innerHTML = txt;
   }
 };
-xmlhttp.open("GET", "https://corona.lmao.ninja/v2/countries?yesterday=true&sort=cases", true);
+xmlhttp.open("GET", "https://www.trackcorona.live/api/countries", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + dbParam);
 
@@ -109,18 +111,22 @@ var chart = new CanvasJS.Chart("chartContainer", {
 });
 
 function addData(data) {
+//alert(data.data[0].location)
+ data.data.sort(function(a, b){
+    return b.confirmed - a.confirmed;
+}); 
 	for (var i = 0; i < 25; i++) {
-	//alert(data[i].country)
+//	alert(data.data[i].location)
 		dataPoints.push({		
-			label: data[i].country,
-			y: data[i].cases
+			label: data.data[i].location,
+			y: data.data[i].confirmed
 		});
 	}
 	chart.render();
 
 }
 
-$.getJSON("https://corona.lmao.ninja/v2/countries?yesterday=true&sort=cases", addData);
+$.getJSON("https://www.trackcorona.live/api/countries", addData);
 
 }
 
