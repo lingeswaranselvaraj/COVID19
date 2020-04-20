@@ -32,6 +32,10 @@
 
 <p id="demo"></p>
 
+<h2>COVID-19 STATE WISE STATUS - <script> document.write(new Date().toLocaleDateString()); </script></h2>
+
+<p id="demo2"></p>
+
 <script>
 var obj, dbParam, xmlhttp, myObj, x, txt = "";
 obj = { table: "customers", limit: 20 };
@@ -56,6 +60,42 @@ xmlhttp.onreadystatechange = function() {
 xmlhttp.open("GET", "https://corona.lmao.ninja/v2/countries/India?yesterday=true&strict=true", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + dbParam);
+
+var obj, dbParam, xmlhttp, myObj, x, txt1 = "";
+obj = { table: "customers", limit: 20 };
+dbParam = JSON.stringify(obj);
+xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    myObj = (JSON.parse(this.responseText)).response;
+myObj.sort(function(a, b){
+    return b.confirmed - a.confirmed;
+});
+
+    txt1 += "<table id='customers' border='2'>"
+	txt1 += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>STATE</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CONFIRMED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>ACTIVE CASES</span>" + "</th></tr>";
+    //alert(myObj.response[0].id)
+	
+	for (x in myObj) {
+	
+	  
+		//txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
+		txt1 += "<tr><td>" + myObj[x].name + "</td><td>" + myObj[x].confirmed + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].recovered + "</td><td>" + myObj[x].active + "</td></tr>";
+
+    }
+    txt1 += "</table>"    
+    document.getElementById("demo2").innerHTML = txt1;
+  }
+};
+xmlhttp.open("GET", "https://covid19india.p.rapidapi.com/getIndiaStateData");
+xmlhttp.setRequestHeader("x-rapidapi-host", "covid19india.p.rapidapi.com");
+xmlhttp.setRequestHeader("x-rapidapi-key", "ddd65e38bemsh58aa0001f061d7cp1d5077jsnc1678d30bb33");
+xmlhttp.send(dbParam);
+
+
+
+
+
 </script>
 
 
