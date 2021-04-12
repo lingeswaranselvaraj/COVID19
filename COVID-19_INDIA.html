@@ -1,3 +1,34 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@lingeswaranselvaraj 
+lingeswaranselvaraj
+/
+COVID19
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+COVID19/COVID-19_INDIA.html
+@lingeswaranselvaraj
+lingeswaranselvaraj Update COVID-19_INDIA.html
+Latest commit 4d47a56 on Apr 20, 2020
+ History
+ 1 contributor
+123 lines (93 sloc)  4.75 KB
+  
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,8 +79,10 @@ color: Red;
 
 <h2>COVID-19 INDIA - <script> document.write(new Date().toLocaleDateString()); </script></h2>
 <p id="demo"></p>
-
-<h2>COVID-19 STATE WISE STATUS - <script> document.write(new Date().toLocaleDateString()); </script></h2>
+<script> var currentDate = new Date();
+var yesterdayDate = currentDate.setDate(currentDate.getDate()- 1);
+ </script>
+<h2>COVID-19 STATE WISE STATUS - <script> document.write(new Date(yesterdayDate).toLocaleDateString()); </script></h2>
 
 <p id="demo2"></p>
 
@@ -61,6 +94,7 @@ xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
         myObj = (JSON.parse(this.responseText)).data;
+
     txt += "<table id='customers' border='2'>"
 	//txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TODAYS DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL TESTS DONE</span>" + "</th></tr>";
     txt += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>COUNTRY</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th></tr>";
@@ -87,29 +121,29 @@ dbParam = JSON.stringify(obj);
 xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-    myObj = (JSON.parse(this.responseText)).response;
-myObj.sort(function(a, b){
-    return b.confirmed - a.confirmed;
-});
-
+    myObj = (JSON.parse(this.responseText)).state_wise;
+		//alert((JSON.parse(this.responseText)).state_wise.Maharashtra.active)	
+//myObj.sort(function(a, b){
+//    return b.confirmed - a.confirmed;
+//});
     txt1 += "<table id='customers' border='2'>"
-	txt1 += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>STATE</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CONFIRMED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>ACTIVE CASES</span>" + "</th></tr>";
+	txt1 += "<tr><th style='text-align:center;'>" + "<span style='font-weight:bold;'>STATE</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL CONFIRMED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>TOTAL DEATH</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED CASES</span>" + "</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>ACTIVE CASES</span>"+"</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>CONFIRMED YESTERDAY</span>" +"</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>DEATHS YESTERDAY</span>" +"</th><th style='text-align:center;'>" + "<span style='font-weight:bold;'>RECOVERED YESTERDAY</span>" + "</th></tr>";
     //alert(myObj.response[0].id)
 	
 	for (x in myObj) {
 	
 	  
-		//txt += "<tr><td>" + myObj[x].country + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
-		txt1 += "<tr><td>" + myObj[x].name + "</td><td>" + myObj[x].confirmed + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].recovered + "</td><td>" + myObj[x].active + "</td></tr>";
+		//txt += "<tr><td>" + myObj.state + "</td><td>" + myObj[x].cases + "</td><td>" + myObj[x].todayCases + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].todayDeaths + "</td><td>" + myObj[x].recovered + "</td></tr>";
+		txt1 += "<tr><td>" + myObj[x].state + "</td><td>" + myObj[x].confirmed + "</td><td>" + myObj[x].deaths + "</td><td>" + myObj[x].recovered + "</td><td>" + myObj[x].active +  "</td><td>" + myObj[x].deltaconfirmed + "</td><td>" + myObj[x].deltadeaths + "</td><td>" + myObj[x].deltarecovered + "</td></tr>";
 
     }
     txt1 += "</table>"    
     document.getElementById("demo2").innerHTML = txt1;
   }
 };
-xmlhttp.open("GET", "https://covid19india.p.rapidapi.com/getIndiaStateData");
-xmlhttp.setRequestHeader("x-rapidapi-host", "covid19india.p.rapidapi.com");
-xmlhttp.setRequestHeader("x-rapidapi-key", "ddd65e38bemsh58aa0001f061d7cp1d5077jsnc1678d30bb33");
+xmlhttp.open("GET", "https://corona-virus-world-and-india-data.p.rapidapi.com/api_india");
+xmlhttp.setRequestHeader("x-rapidapi-host", "corona-virus-world-and-india-data.p.rapidapi.com");
+xmlhttp.setRequestHeader("x-rapidapi-key", "fdf64dcb5amsh333f96d181b7fcep13e3b7jsn050b8ee3995b");
 xmlhttp.send(dbParam);
 
 
@@ -121,3 +155,16 @@ xmlhttp.send(dbParam);
 
 </body>
 </html>
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
